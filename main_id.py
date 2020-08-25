@@ -7,9 +7,9 @@ import win32com.client
 import csv
 import sys
 
-def get_table(excel_path):
+def get_table(excel_path, sheet=0):
     data = xlrd.open_workbook(excel_path)
-    table = data.sheets()[0]
+    table = data.sheets()[sheet]
     # table = data.sheet_by_index(0)
     return table
 
@@ -20,17 +20,16 @@ def write_row(ws, sh, index, cursor):
     return cursor
 
 if __name__ == '__main__':
-    in1_path = 'io/2020年档案入库统计.xls' # in
-    in2_path = 'io/2020年新增就业登记情况（截止0803）_nopassword.xlsx' # in
-    out_path = 'io/2020年网签情况.xls' # out
-    in1 = get_table(in1_path)
+    in1_path = 'io/2019年档案入库统计_id.xlsx' # in
+    in2_path = 'io/2019年新增就业登记情况_nopassword.xlsx' # in
+    out_path = 'io/2019年网签情况.xls' # out
+    in1 = get_table(in1_path, 1)
     in2 = get_table(in2_path)
     out = get_table(out_path)
 
-    # ###### 注意改一下三行列数 #######
     in1_idcard_value = in1.col_values(2)[1:] # 含空
-    in2_idcard_value = in2.col_values(1)[1:] # 全
-    out_idcard_value = out.col_values(6)[1:] # 全
+    in2_idcard_value = in2.col_values(0)[1:] # 全
+    out_idcard_value = out.col_values(5)[1:] # 全
 
     # 仅凭id card求得交集
     union_id = [i1 for i1 in in1_idcard_value if i1 in in2_idcard_value]
@@ -108,5 +107,5 @@ if __name__ == '__main__':
     for rawx in union_in2_name_rawx:
         new_in2_cursor = write_row(new_in2_sheet1, in2, rawx+1, new_in2_cursor)
 
-    new_in1.save('io/new_in1.xls')
-    new_in2.save('io/new_in2.xls')
+    new_in1.save('io/_new_in1.xls')
+    new_in2.save('io/_new_in2.xls')

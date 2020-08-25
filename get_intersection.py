@@ -7,9 +7,9 @@ import win32com.client
 import csv
 import sys
 
-def get_table(excel_path):
+def get_table(excel_path, sheet=0):
     data = xlrd.open_workbook(excel_path)
-    table = data.sheets()[0]
+    table = data.sheets()[sheet]
     # table = data.sheet_by_index(0)
     return table
 
@@ -20,23 +20,16 @@ def write_row(ws, sh, index, cursor):
     return cursor
 
 if __name__ == '__main__':
-    in1_path = 'io/2020年档案入库统计.xls' # in
-    in2_path = 'io/2020年新增就业登记情况（截止0803）_nopassword.xlsx' # in
-    out_path = 'io/2020年网签情况.xls' # out
+    in1_path = 'io/2018年档案入库情况20200812.xls' # in
+    in2_path = 'io/2019年新增就业登记情况_nopassword.xlsx' # in
     in1 = get_table(in1_path)
     in2 = get_table(in2_path)
-    out = get_table(out_path)
 
-    # ###### 注意改一下三行列数 #######
-    in1_idcard_value = in1.col_values(2)[1:] # 含空
-    in2_idcard_value = in2.col_values(1)[1:] # 全
-    out_idcard_value = out.col_values(6)[1:] # 全
+    in1_idcard_value = in1.col_values(2)[1:]
+    in2_idcard_value = in2.col_values(0)[1:]
 
     # 仅凭id card求得交集
     union_id = [i1 for i1 in in1_idcard_value if i1 in in2_idcard_value]
-
-    # 提出out中的id
-    final_id = [x for x in union_id if x not in out_idcard_value]
 
     new_in1 = xlwt.Workbook()
     new_in1_sheet0 = new_in1.add_sheet('sheet0')
@@ -49,7 +42,7 @@ if __name__ == '__main__':
     # new_out = xlwt.Workbook()
     # new_out_sheet = new_out.add_sheet('sheet0')
     # new_out_cursor = 0
-    for id in final_id:
+    for id in union_id:
         new_in1_cursor = write_row(new_in1_sheet0, in1, in1_idcard_value.index(id)+1, new_in1_cursor)
         new_in2_cursor = write_row(new_in2_sheet0, in2, in2_idcard_value.index(id)+1, new_in2_cursor)
         # new_out_cursor = write_row(new_out_sheet, out, out_idcard_value.index(id)+1, new_out_cursor)
@@ -108,5 +101,5 @@ if __name__ == '__main__':
     for rawx in union_in2_name_rawx:
         new_in2_cursor = write_row(new_in2_sheet1, in2, rawx+1, new_in2_cursor)
 
-    new_in1.save('io/new_in1.xls')
-    new_in2.save('io/new_in2.xls')
+    new_in1.save('io/_new_in1.xls')
+    new_in2.save('io/_new_in2.xls')
