@@ -76,13 +76,14 @@ if __name__ == '__main__':
         # new excel
         new_book = xlwt.Workbook()
         new_sheet0 = new_book.add_sheet('sheet0')
-        new_cursor = write_row(new_sheet0, in_table, row_id, 0)
+        new_cursor = write_row(new_sheet0, in_table, 0, 0)
+        new_cursor = write_row(new_sheet0, in_table, row_id, 1)
         new_book.save(root+'complete_data.xls')
 
         # accessory
         idx_path = []
         for path in accessory_list:
-            if "序号"+str(idx) in path:
+            if "序号"+str(idx)+"_" in path:
                 # idx_path.append(path)
                 shutil.copyfile(accessory_root+path, root+path)
 
