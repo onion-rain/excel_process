@@ -1,2 +1,4 @@
 xlrd
 xlwt
+pypiwin32
+pyinstaller

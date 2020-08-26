@@ -21,12 +21,12 @@ def write_row(ws, sh, index, cursor):
 
 if __name__ == '__main__':
     in1_path = 'io/2018年档案入库情况20200812.xls' # in
-    in2_path = 'io/2019年新增就业登记情况_nopassword.xlsx' # in
+    in2_path = 'io/2020年新增就业登记情况（截止0803）_nopassword.xlsx' # in
     in1 = get_table(in1_path)
     in2 = get_table(in2_path)
 
     in1_idcard_value = in1.col_values(2)[1:]
-    in2_idcard_value = in2.col_values(0)[1:]
+    in2_idcard_value = in2.col_values(1)[1:]
 
     # 仅凭id card求得交集
     union_id = [i1 for i1 in in1_idcard_value if i1 in in2_idcard_value]
@@ -53,53 +53,53 @@ if __name__ == '__main__':
     
 
 
-    # 第一轮比较完后剩余需要比对的行号
-    in1_rest_rawx = [i for i, x in enumerate(in1_idcard_value) if x=='']
-    in2_rest_rawx = [i for i, x in enumerate(in2_idcard_value) if x not in union_id]
+    # # 第一轮比较完后剩余需要比对的行号
+    # in1_rest_rawx = [i for i, x in enumerate(in1_idcard_value) if x=='']
+    # in2_rest_rawx = [i for i, x in enumerate(in2_idcard_value) if x not in union_id]
 
-    # 排除out与in1、in2 重合id
-    in1_id_in_out = [x for x in in1_idcard_value if x in out_idcard_value]
-    in2_id_in_out = [x for x in in2_idcard_value if x in out_idcard_value]
-    in1_id_in_out_rawx = []
-    in2_id_in_out_rawx = []
-    for id in in1_id_in_out:
-        in1_id_in_out_rawx.append(in1_idcard_value.index(id))
-    for id in in2_id_in_out:
-        in2_id_in_out_rawx.append(in2_idcard_value.index(id))
-    in1_rest_rawx = [x for x in in1_rest_rawx if x not in in1_id_in_out_rawx]
-    in2_rest_rawx = [x for x in in2_rest_rawx if x not in in2_id_in_out_rawx]
+    # # 排除out与in1、in2 重合id
+    # in1_id_in_out = [x for x in in1_idcard_value if x in out_idcard_value]
+    # in2_id_in_out = [x for x in in2_idcard_value if x in out_idcard_value]
+    # in1_id_in_out_rawx = []
+    # in2_id_in_out_rawx = []
+    # for id in in1_id_in_out:
+    #     in1_id_in_out_rawx.append(in1_idcard_value.index(id))
+    # for id in in2_id_in_out:
+    #     in2_id_in_out_rawx.append(in2_idcard_value.index(id))
+    # in1_rest_rawx = [x for x in in1_rest_rawx if x not in in1_id_in_out_rawx]
+    # in2_rest_rawx = [x for x in in2_rest_rawx if x not in in2_id_in_out_rawx]
 
-    # 求name交集
-    in1_name_value = in1.col_values(0)[1:]
-    in2_name_value = in2.col_values(1)[1:]
-    in1_name_rest_value = [x for i, x in enumerate(in1_name_value) if i in in1_rest_rawx]
-    in2_name_rest_value = [x for i, x in enumerate(in2_name_value) if i in in2_rest_rawx]
-    union_name = [i1 for i1 in in1_name_rest_value if i1 in in2_name_rest_value]
+    # # 求name交集
+    # in1_name_value = in1.col_values(0)[1:]
+    # in2_name_value = in2.col_values(1)[1:]
+    # in1_name_rest_value = [x for i, x in enumerate(in1_name_value) if i in in1_rest_rawx]
+    # in2_name_rest_value = [x for i, x in enumerate(in2_name_value) if i in in2_rest_rawx]
+    # union_name = [i1 for i1 in in1_name_rest_value if i1 in in2_name_rest_value]
 
-    # name交集所在行号
-    union_in1_name_rawx = []
-    union_in2_name_rawx = []
-    for name in union_name:
-        in1_name_rawx = [i for i, x in enumerate(in1_name_value) if x==name]
-        in2_name_rawx = [i for i, x in enumerate(in2_name_value) if x==name]
-        union_1_raw_x = [x for x in in1_name_rawx if x in in1_rest_rawx]
-        union_2_raw_x = [x for x in in2_name_rawx if x in in2_rest_rawx]
+    # # name交集所在行号
+    # union_in1_name_rawx = []
+    # union_in2_name_rawx = []
+    # for name in union_name:
+    #     in1_name_rawx = [i for i, x in enumerate(in1_name_value) if x==name]
+    #     in2_name_rawx = [i for i, x in enumerate(in2_name_value) if x==name]
+    #     union_1_raw_x = [x for x in in1_name_rawx if x in in1_rest_rawx]
+    #     union_2_raw_x = [x for x in in2_name_rawx if x in in2_rest_rawx]
 
-        if len(union_1_raw_x) > 0 and len(union_2_raw_x) > 0:
-            union_in1_name_rawx += union_1_raw_x
-            union_in2_name_rawx += union_2_raw_x
+    #     if len(union_1_raw_x) > 0 and len(union_2_raw_x) > 0:
+    #         union_in1_name_rawx += union_1_raw_x
+    #         union_in2_name_rawx += union_2_raw_x
 
     
-    new_in1_sheet1 = new_in1.add_sheet('sheet1')
-    new_in1_cursor = write_row(new_in1_sheet1, in1, 0, 0)
-    new_in1_cursor = 1
-    new_in2_sheet1 = new_in2.add_sheet('sheet1')
-    new_in2_cursor = write_row(new_in2_sheet1, in2, 0, 0)
-    new_in2_cursor = 1
-    for rawx in union_in1_name_rawx:
-        new_in1_cursor = write_row(new_in1_sheet1, in1, rawx+1, new_in1_cursor)
-    for rawx in union_in2_name_rawx:
-        new_in2_cursor = write_row(new_in2_sheet1, in2, rawx+1, new_in2_cursor)
+    # new_in1_sheet1 = new_in1.add_sheet('sheet1')
+    # new_in1_cursor = write_row(new_in1_sheet1, in1, 0, 0)
+    # new_in1_cursor = 1
+    # new_in2_sheet1 = new_in2.add_sheet('sheet1')
+    # new_in2_cursor = write_row(new_in2_sheet1, in2, 0, 0)
+    # new_in2_cursor = 1
+    # for rawx in union_in1_name_rawx:
+    #     new_in1_cursor = write_row(new_in1_sheet1, in1, rawx+1, new_in1_cursor)
+    # for rawx in union_in2_name_rawx:
+    #     new_in2_cursor = write_row(new_in2_sheet1, in2, rawx+1, new_in2_cursor)
 
     new_in1.save('io/_new_in1.xls')
     new_in2.save('io/_new_in2.xls')

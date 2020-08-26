@@ -1,2 +1,6 @@
 io/
 raw/
+dist/
+build/
+*.spec
+__pycache__
